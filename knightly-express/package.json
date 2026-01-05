@@ -1,0 +1,41 @@
+{
+  "name": "knightly-ws",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test-client": "ts-node src/test-client.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KamoheloKoali/knightly-ws.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KamoheloKoali/knightly-ws/issues"
+  },
+  "homepage": "https://github.com/KamoheloKoali/knightly-ws#readme",
+  "description": "",
+  "dependencies": {
+    "@types/socket.io-client": "^1.4.36",
+    "@types/uuid": "^10.0.0",
+    "chess.ts": "^0.16.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
+    "@types/socket.io": "^3.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
+}

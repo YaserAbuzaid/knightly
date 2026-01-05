@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id
+  name          String
+  chessUsername String?
+  email         String        @unique
+  emailVerified Boolean
+  image         String?
+  chessPlatform String?
+  country       String?
+  flagCode      String?
+  title         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  chessClubs    ChessClubs[]  @relation("UserToChessClubs")
+  accounts      Account[]
+  sessions      Session[]
+  chatMessages  ChatMessage[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model ChessClubs {
+  id           String        @id
+  name         String
+  icon         String?
+  url          String?
+  description  String?
+  memberCount  Int?
+  joinedAt     DateTime?
+  lastActivity DateTime?
+  platform     String
+  platformId   String?
+  userIds      String[]
+  lastSynced   DateTime      @updatedAt
+  admins       String[]
+  users        User[]        @relation("UserToChessClubs")
+  chatChannels ChatChannel[]
+
+  @@index([platform, platformId])
+  @@map("chessClubs")
+}
+
+model ChatChannel {
+  id        String        @id @default(uuid())
+  clubId    String
+  name      String
+  eloMin    Int
+  eloMax    Int
+  createdAt DateTime      @default(now())
+  messages  ChatMessage[]
+  club      ChessClubs    @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@unique([clubId, eloMin, eloMax])
+  @@index([clubId])
+  @@map("chat_channel")
+}
+
+model ChatMessage {
+  id        String      @id @default(uuid())
+  channelId String
+  userId    String
+  content   String
+  isEdited  Boolean     @default(false)
+  isDeleted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  channel   ChatChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([channelId])
+  @@index([userId])
+  @@map("chat_message")
+}
