@@ -1,8 +1,8 @@
 # Knightly Monorepo
 
 Knightly lets chess.com players face lichess.org players in the same real-time pool. This repo holds two apps:
-- `knightly/` — Next.js app (UI, auth, REST) that players use.
-- `knightly-ws/` — Node/Socket.IO server for matchmaking, gameplay, clocks, and chat broadcast.
+- `knightly-next/` — Next.js app (UI, auth, REST) that players use.
+- `knightly-express/` — Node/Socket.IO server for matchmaking, gameplay, clocks, and chat broadcast.
 
 ## Concept
 - Cross-platform: chess.com users can play lichess.org users seamlessly.
@@ -17,9 +17,9 @@ Knightly lets chess.com players face lichess.org players in the same real-time p
 
 ## How the System Works
 - Auth + profile: users sign in, link a chess identity (chess.com or lichess.org), carry Elo/avatar/country/flag.
-- Register: client opens a websocket to `knightly-ws`, emits `registerPlayer` with id, Elo, time control, platform tag, and profile data.
+- Register: client opens a websocket to `knightly-express`, emits `registerPlayer` with id, Elo, time control, platform tag, and profile data.
 - Matchmaking: `joinQueue` pairs closest Elo; after 60s the allowed Elo delta widens. `matchFound` returns game id, colors, opponent profile, and time control.
-- Game flow: players confirm (`respondToMatch`), server starts clocks, validates moves with chess.ts, broadcasts FEN/turn/clock via `gameState` and `clockUpdate`. Early false checkmates/draws are guarded against.
+- Game flow: players confirm (`respondToMatch`), server starts clocks, validates moves with chess.ts, broadcasts FEN/turn/clock via `gameState` and `clockUpdate`. Early false checkmates/draexpress are guarded against.
 - Outcomes: resign (`resign`), timeout, or disconnect window (30s) ends games; reconnect uses `reconnect` + `requestGameState` to resync.
 - Chat: channel-based events (`chat:join/send/edit/delete`); history comes from the app's REST API, websocket just broadcasts.
 
@@ -30,9 +30,9 @@ The websocket server is deployed on Render.com. After periods of inactivity, col
 1) Install dependencies (rooted in each project):
 ```bash
 cd knightly && pnpm install
-cd ../knightly-ws && pnpm install
+cd ../knightly-express && pnpm install
 ```
-2) Env vars (examples in `knightly/.env`):
+2) Env vars (examples in `knightly-next/.env`):
 ```
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 DATABASE_URL=postgresql://USER:PASS@HOST/DB?sslmode=require
@@ -47,14 +47,14 @@ WEBSOCKET_SERVER=http://localhost:4000
 3) Start services:
 ```bash
 # Next.js app
-cd knightly
+cd knightly-next
 pnpm dev
 
 # Websocket server
-cd ../knightly-ws
+cd ../knightly-express
 pnpm dev
 ```
-4) Visit http://localhost:3000, queue two users in separate browsers/tabs, and play.
+4) Visit http://localhost:3000, queue two users in separate broexpressers/tabs, and play.
 
 ## Key Websocket Events
 - Player: `registerPlayer`, `joinQueue`, `leaveQueue`, `respondToMatch`, `reconnect`
