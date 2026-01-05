@@ -34,9 +34,9 @@ export const useSocketStore = create<SocketStore>((set) => ({
   connect: () => {
     if (!socket) {
       // Use environment variable for the WebSocket server URL if available, otherwise use localhost
-      // const wsUrl = "https://knightly-ws.onrender.com";
-      const wsUrl =
-        process.env.NEXT_PUBLIC_WS_SERVER_URL || "http://localhost:4000";
+      const wsUrl = "https://knightly-express.onrender.com";
+      // const wsUrl =
+        // process.env.NEXT_PUBLIC_WS_SERVER_URL || "http://localhost:4000";
 
       socket = io(wsUrl, {
         reconnectionAttempts: 10,
